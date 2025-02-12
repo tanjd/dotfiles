@@ -1,0 +1,14 @@
+[user]
+	name = Jeddy Tan
+	email = tanjd@hotmail.com
+	signingKey = F3D704F46B303D665152A7B13FC6CAD96050BE5A
+[core]
+	editor = code --wait
+[init]
+	defaultbranch = main
+[commit]
+	gpgSign = false
+[push]
+	autoSetupRemote = true
+[credential]
+	helper = cache
