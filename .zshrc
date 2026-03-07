@@ -1,4 +1,3 @@
-
 export ZSH="$HOME/.oh-my-zsh"
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 export POETRY_PATH="/home/tanjd/.local/bin"
@@ -11,7 +10,7 @@ zstyle ':omz:update' mode auto
 
 COMPLETION_WAITING_DOTS="true"
 
-plugins=(git zsh-autosuggestions z sudo zsh-syntax-highlighting copypath alias-finder)
+plugins=(git zsh-autosuggestions z sudo copypath alias-finder zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -20,10 +19,12 @@ zstyle ':omz:plugins:alias-finder' exact yes
 zstyle ':omz:plugins:alias-finder' cheaper yes
 
 # Example aliases
-alias zshconfig="code ~/.zshrc"
-alias awsconfig="code ~/.aws/config"
-alias gitconfig="code ~/.gitconfig"
-alias sshconfig="code ~/.ssh/config"
-alias gpgconfig="code ~/.gnupg/gpg-agent.conf"
+alias zshconfig="cursor ~/.zshrc"
+alias awsconfig="cursor ~/.aws/config"
+alias gitconfig="cursor ~/.gitconfig"
+alias sshconfig="cursor ~/.ssh/config"
+alias gpgconfig="cursor ~/.gnupg/gpg-agent.conf"
 alias projects="cd ~/projects"
+alias ssh='ssh.exe'
+alias ssh-add='ssh-add.exe'
 alias amend="git commit --amend --no-edit"
