@@ -1,0 +1,12 @@
+# macOS-only dev tooling. Not portable to WSL2/Linuxbrew, so this is a
+# separate file from the cross-platform Brewfile rather than an if OS.mac?
+# block within it.
+# Install with: ./install.macos-dev.sh (also symlinks colima.yaml)
+# or directly:  brew bundle --file=Brewfile.macos-dev
+
+cask "font-jetbrains-mono"  # terminal/editor font
+cask "visual-studio-code"   # editor
+
+brew "colima"          # container runtime (Docker Desktop alternative)
+brew "docker"          # Docker CLI, talks to colima
+brew "docker-compose"  # docker compose CLI plugin

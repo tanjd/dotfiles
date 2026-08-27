@@ -19,3 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: ./install.wsl.sh
+
+  install-macos-sh:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./install.macos.sh

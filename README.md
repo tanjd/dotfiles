@@ -30,16 +30,23 @@ Nothing to do manually — `install.sh` runs automatically as part of devcontain
 
 ### New Mac (personal or work)
 
-**Not fully automated yet** — there's no `install.macos.sh` or `gitconfig.macos` in this repo yet. Until that exists:
-
 1. Install the same oh-my-zsh plugins as WSL2: `git zsh-autosuggestions z sudo copypath alias-finder zsh-syntax-highlighting` (`install.sh` handles installing oh-my-zsh itself and cloning `zsh-autosuggestions`/`zsh-syntax-highlighting`; the rest of the plugin list is bundled with oh-my-zsh already).
-2. Clone this repo and run the shared installer:
+2. Clone this repo and run the macOS installer:
    ```sh
-   ./install.sh
+   ./install.macos.sh
    ```
-3. Manually configure git — see "macOS" under Platform-specific notes below.
-4. Optional — `brew bundle --file=Brewfile` (this also installs the macOS-only extras: JetBrains Mono font, Colima, Docker CLI, docker-compose).
-5. **If this is the work laptop**: git identity switching (work vs. personal repos, both live under `~/projects/`) isn't set up yet either — see `CLAUDE.md`'s "Planned, not yet implemented" section for the exact plan before improvising something here.
+   This runs `install.sh` first, then symlinks `gitconfig.macos` → `~/.gitconfig`, the shared `allowed_signers`, and `ssh_config.macos` → `~/.ssh/config` (1Password agent socket path differs from WSL — see "macOS" under Platform-specific notes below). Safe to re-run; pre-existing files get backed up to `<path>.bak`.
+3. Optional — install dev tooling (`font-jetbrains-mono`, VS Code, Colima, Docker CLI, docker-compose) and symlink `colima.yaml`'s Colima config template in one step:
+   ```sh
+   ./install.macos-dev.sh
+   colima start
+   ```
+   See "macOS" under Platform-specific notes below for what the Colima settings do.
+4. Optional — install personal apps (Obsidian, Tailscale):
+   ```sh
+   ./install.macos-personal.sh
+   ```
+5. **If this is the work laptop**: git identity switching (work vs. personal repos, both live under `~/projects/`) isn't set up yet — see `CLAUDE.md`'s "Planned, not yet implemented" section for the exact plan before improvising something here. `gitconfig.macos` as symlinked by step 2 is the single default identity, fine as-is for a personal Mac.
 
 ### JetBrains Mono in Windows Terminal
 
@@ -52,26 +59,34 @@ If you `brew install --cask font-jetbrains-mono` from *inside WSL2*, it only bec
 | `.zshrc` | `~/.zshrc` | Both |
 | `.gitignore_global` | `~/.gitignore_global` | Both |
 | `gitconfig.wsl` | `~/.gitconfig` | WSL only (auto-forwarded by devcontainer) |
+| `gitconfig.macos` | `~/.gitconfig` | macOS only |
 | `ssh_config.wsl` | `~/.ssh/config` | WSL only (1Password agent socket path differs on macOS) |
+| `ssh_config.macos` | `~/.ssh/config` | macOS only |
 | `.claude/settings.json` | `~/.claude/settings.json` | Both |
 | `.claude/skills/` | `~/.claude/skills/` | Both |
-| `.config/git/allowed_signers` | `~/.config/git/allowed_signers` | WSL only |
+| `.config/git/allowed_signers` | `~/.config/git/allowed_signers` | Both |
 | `windows-terminal-settings.json` | `/mnt/c/Users/tanjd/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json` | WSL only |
 | `Brewfile` | not symlinked — run in place | Both |
+| `Brewfile.macos-dev` | not symlinked — run in place | macOS only |
+| `Brewfile.macos-personal` | not symlinked — run in place | macOS only |
+| `colima.yaml` | `~/.colima/_templates/default.yaml` | macOS only |
 
 ## Install scripts reference
 
 - **`install.sh`** — shared/cross-platform baseline. Installs oh-my-zsh itself (unattended) if `~/.oh-my-zsh` doesn't already exist, then symlinks `.zshrc`, `.gitignore_global`, `.claude/settings.json`, `.claude/skills/commit`, and clones the oh-my-zsh custom plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) if missing. Run automatically by devcontainers.
 - **`install.wsl.sh`** — calls `install.sh`, then additionally symlinks `gitconfig.wsl` → `~/.gitconfig`, `.config/git/allowed_signers`, `ssh_config.wsl` → `~/.ssh/config`, and (only when actually running under WSL with the Windows path present) `windows-terminal-settings.json` onto the Windows side. Manual, first-time-per-machine.
-- Both scripts back up any pre-existing non-symlink file to `<path>.bak` before symlinking (via `install-lib.sh`'s `link_file` helper) — safe to run on a machine with existing config. Re-running is idempotent.
+- **`install.macos.sh`** — macOS only. Calls `install.sh`, then symlinks `gitconfig.macos` → `~/.gitconfig`, `.config/git/allowed_signers`, and `ssh_config.macos` → `~/.ssh/config`. Mirrors `install.wsl.sh`'s structure. Manual, first-time-per-machine.
+- **`install.macos-dev.sh`** — macOS only. Runs `brew bundle --file=Brewfile.macos-dev` (font-jetbrains-mono, VS Code, Colima, Docker CLI, docker-compose), then symlinks `colima.yaml` → `~/.colima/_templates/default.yaml`. Doesn't call `install.sh` — run that separately first. Manual, first-time-per-machine (safe to re-run).
+- **`install.macos-personal.sh`** — macOS only. Runs `brew bundle --file=Brewfile.macos-personal` (Obsidian, Tailscale). No symlinking. Manual, first-time-per-machine.
+- All scripts back up any pre-existing non-symlink file to `<path>.bak` before symlinking (via `install-lib.sh`'s `link_file` helper) — safe to run on a machine with existing config. Re-running is idempotent.
 
 ## Homebrew packages (optional, manual)
 
-`Brewfile` lists the Homebrew/Linuxbrew formulae and casks for this dev environment (`gcc`, `gh`, `node`, `rtk`, `jq`, `tree`, the `claude-code` cask), plus a macOS-only section (`font-jetbrains-mono`, `colima`, `docker`, `docker-compose`) gated behind `if OS.mac?`. Not run automatically by either install script — install deliberately with:
-
-```sh
-brew bundle --file=Brewfile
-```
+- `Brewfile` — cross-platform formulae/casks (`gcc`, `gh`, `node`, `rtk`, `jq`, `tree`, the `claude-code` cask). Not run automatically by any install script:
+  ```sh
+  brew bundle --file=Brewfile
+  ```
+- `Brewfile.macos-dev` / `Brewfile.macos-personal` — macOS-only, split by purpose so a machine can install one without the other. Run via `./install.macos-dev.sh` / `./install.macos-personal.sh` (see above) or directly with `brew bundle --file=...`.
 
 ## CI
 
@@ -90,5 +105,10 @@ brew bundle --file=Brewfile
 
 ### macOS
 - Install oh-my-zsh and the same plugins: `git zsh-autosuggestions z sudo copypath alias-finder zsh-syntax-highlighting`
-- Git commit signing: configure `[gpg "ssh"]` separately with the macOS 1Password SSH agent socket
-- See `CLAUDE.md`'s "Planned, not yet implemented" section for what's still missing (`gitconfig.macos`, `install.macos.sh`, work-vs-personal git identity switching)
+- `gitconfig.macos` contains macOS-specific git settings (mirrors `gitconfig.wsl` otherwise):
+  - `credential.helper = osxkeychain` — native Keychain instead of WSL's plaintext store
+  - No `core.sshCommand` override — the native `ssh` binary is used directly
+  - `gpg.ssh.program` — 1Password's native macOS SSH-signing binary at `/Applications/1Password.app/Contents/MacOS/op-ssh-sign`
+- `ssh_config.macos` points `IdentityAgent` at 1Password's macOS SSH agent socket (`~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock`) instead of the WSL bridge socket (`~/.1password/agent.sock`)
+- `colima.yaml` configures Colima's VM for Apple Silicon: `vmType: vz` (Apple's Virtualization.framework, faster than the QEMU default) paired with `mountType: virtiofs` (faster than the default `sshfs`), a native `arch: aarch64` VM, `rosetta: true` for occasional amd64-only images without giving up the native VM, and a moderate `cpu: 4` / `memory: 4` sized for typical dev containers. It's a config *template*, only applied when a Colima profile is first created — `install.macos-dev.sh` symlinks it into place, but that only takes effect before `colima start` runs for the first time (or after `colima delete`).
+- See `CLAUDE.md`'s "Planned, not yet implemented" section for what's still missing (`gitconfig.macos`, work-vs-personal git identity switching)

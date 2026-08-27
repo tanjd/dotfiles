@@ -9,11 +9,3 @@ brew "jq"    # JSON processor
 brew "tree"  # Recursive directory lister
 
 cask "claude-code"  # Claude Code CLI
-
-if OS.mac?
-  cask "font-jetbrains-mono"  # terminal/editor font
-
-  brew "colima"          # container runtime (Docker Desktop alternative)
-  brew "docker"          # Docker CLI, talks to colima
-  brew "docker-compose"  # docker compose CLI plugin
-end
