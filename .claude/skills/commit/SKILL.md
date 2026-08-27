@@ -2,7 +2,7 @@ Create a git commit following this repo's Conventional Commits convention and co
 
 ## Steps
 
-1. Run `git branch --show-current` and check if on `main`. If so, **stop immediately** — do not commit to main directly. create a new branch named `<short-description>`, switch to it, then continue.
+1. Determine the repo's default branch: `git symbolic-ref refs/remotes/origin/HEAD --short 2>/dev/null | sed 's@^origin/@@'`, falling back to `git remote show origin | sed -n 's/^\s*HEAD branch: //p'` if that's empty (commonly `main` or `master`). Run `git branch --show-current` and check if it matches the default branch. If so, **stop immediately** — do not commit to the default branch directly. Create a new branch named `<short-description>`, switch to it, then continue.
 2. Run `git status`, `git diff` (unstaged), and `git diff --staged` to understand the full picture of changes.
 3. If there are no changes at all, tell the user and stop.
 4. Assess whether the changes form one logical unit or multiple. If they span unrelated concerns, suggest splitting into smaller focused commits and ask the user which grouping to proceed with.
@@ -21,12 +21,12 @@ Create a git commit following this repo's Conventional Commits convention and co
 9. Write the commit message following best practices:
    - **Subject**: `type(scope): imperative-mood summary` (≤72 chars, no period at end)
    - **Body** (if needed): blank line after subject, then explain *what* changed and *why*, not *how*. Wrap at 72 chars.
-10. Before committing, run `make test`.
+10. Before committing, run the project's test suite if one is configured — check for a `test` target in a `Makefile`, a `test` script in `package.json`, or an equivalent per-project command (check the repo's README or CLAUDE.md if unsure). Skip this step if the repo has no test tooling.
 11. Show the proposed commit message (and files to be staged if staging is needed) and ask for confirmation before proceeding.
 12. On confirmation, stage any additional files if needed and run `git commit` using a heredoc to preserve formatting.
 
 ## Rules
-- Never commit directly to `main`. If on main, always create a new branch first.
+- Never commit directly to the repo's default branch (`main`, `master`, or whatever `origin/HEAD` points to). If on it, always create a new branch first.
 - Never use `--no-verify`.
 - Do not include AI attribution lines.
 - Prefer smaller, focused commits over one large commit when changes are logically separable.

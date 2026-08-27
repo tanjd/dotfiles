@@ -7,6 +7,12 @@ zstyle ':omz:update' mode auto
 
 COMPLETION_WAITING_DOTS="true"
 
+HISTSIZE=50000
+SAVEHIST=50000
+setopt HIST_IGNORE_ALL_DUPS
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_SPACE
+
 plugins=(git zsh-autosuggestions z sudo copypath alias-finder zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
@@ -20,7 +26,6 @@ alias zshconfig="code ~/.zshrc"
 alias awsconfig="code ~/.aws/config"
 alias gitconfig="code ~/.gitconfig"
 alias sshconfig="code ~/.ssh/config"
-alias gpgconfig="code ~/.gnupg/gpg-agent.conf"
 alias projects="cd ~/projects"
 alias amend="git commit --amend --no-edit"
 
@@ -30,4 +35,13 @@ if grep -qi microsoft /proc/version 2>/dev/null; then
     # Use Windows SSH binaries for WSL interop (enables Windows ssh-agent and key access)
     alias ssh='ssh.exe'
     alias ssh-add='ssh-add.exe'
+fi
+
+# macOS-specific settings
+if [[ "$(uname)" == "Darwin" ]]; then
+    if [[ -x "/opt/homebrew/bin/brew" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ -x "/usr/local/bin/brew" ]]; then
+        eval "$(/usr/local/bin/brew shellenv)"
+    fi
 fi

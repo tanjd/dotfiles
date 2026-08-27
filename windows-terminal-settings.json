@@ -1,0 +1,62 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": [],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
+    "keybindings": [
+        {
+            "id": "Terminal.CopyToClipboard",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "Terminal.PasteFromClipboard",
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "Terminal.FindText",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        }
+    ],
+    "newTabMenu": [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": {
+        "defaults": {},
+        "list": [
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "elevate": false,
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
+            },
+            {
+                "colorScheme": "Solarized Dark",
+                "font": {
+                    "face": "JetBrains Mono"
+                },
+                "guid": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
+                "hidden": false,
+                "icon": "https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png",
+                "name": "Ubuntu 24.04.1 LTS",
+                "source": "CanonicalGroupLimited.Ubuntu24.04LTS_79rhkp1fndgsc"
+            }
+        ]
+    },
+    "schemes": [],
+    "themes": []
+}
