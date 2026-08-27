@@ -4,6 +4,21 @@ set -e
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DOTFILES_DIR/install-lib.sh"
 
+# zsh itself, required by oh-my-zsh below. Not preinstalled on bare Ubuntu
+# (including GitHub Actions' ubuntu-latest runner); macOS ships it already
+# but brew is the natural fallback if it's ever missing there too.
+if ! command -v zsh >/dev/null 2>&1; then
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get install -y zsh
+    elif command -v brew >/dev/null 2>&1; then
+        brew install zsh
+    else
+        echo "zsh is not installed and no supported package manager (apt-get/brew) was found to install it. Install zsh manually and re-run." >&2
+        exit 1
+    fi
+    echo "zsh installed."
+fi
+
 # oh-my-zsh itself (required by .zshrc). Must run before the .zshrc symlink
 # below: the installer overwrites ~/.zshrc with its own template unless told
 # otherwise, so it needs to go first and get overwritten by our symlink, not
