@@ -1,0 +1,9 @@
+# macOS-only personal apps — not dev tooling, kept separate from
+# Brewfile.macos-dev so a personal machine and a work machine can install
+# different subsets.
+# Install with: ./install.macos-personal.sh
+# or directly:  brew bundle --file=Brewfile.macos-personal
+
+cask "obsidian"   # notes
+cask "tailscale"  # mesh VPN
+cask "claude"     # claude
