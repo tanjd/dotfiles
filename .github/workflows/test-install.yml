@@ -1,0 +1,21 @@
+name: Test install scripts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  install-sh:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./install.sh
+
+  install-wsl-sh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./install.wsl.sh
