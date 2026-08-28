@@ -66,7 +66,7 @@ If you `brew install --cask font-jetbrains-mono` from *inside WSL2*, it only bec
 | `.claude/settings.json` | `~/.claude/settings.json` | Both |
 | `.claude/skills/` | `~/.claude/skills/` | Both |
 | `.config/git/allowed_signers` | `~/.config/git/allowed_signers` | Both |
-| `windows-terminal-settings.json` | `/mnt/c/Users/tanjd/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json` | WSL only |
+| `windows-terminal-settings.json` | `/mnt/c/Users/tanjd/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json` | WSL only, native Windows symlink (not `ln -s`) — see below |
 | `Brewfile` | not symlinked — run in place | Both |
 | `Brewfile.macos-dev` | not symlinked — run in place | macOS only |
 | `Brewfile.macos-personal` | not symlinked — run in place | macOS only |
@@ -76,7 +76,7 @@ If you `brew install --cask font-jetbrains-mono` from *inside WSL2*, it only bec
 ## Install scripts reference
 
 - **`install.sh`** — shared/cross-platform baseline. Installs oh-my-zsh itself (unattended) if `~/.oh-my-zsh` doesn't already exist, then symlinks `.zshrc`, `.gitignore_global`, `.claude/settings.json`, `.claude/skills/commit`, and clones the oh-my-zsh custom plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) if missing. Run automatically by devcontainers.
-- **`install.wsl.sh`** — calls `install.sh`, then additionally symlinks `gitconfig.wsl` → `~/.gitconfig`, `.config/git/allowed_signers`, `ssh_config.wsl` → `~/.ssh/config`, and (only when actually running under WSL with the Windows path present) `windows-terminal-settings.json` onto the Windows side. Manual, first-time-per-machine.
+- **`install.wsl.sh`** — calls `install.sh`, then additionally symlinks `gitconfig.wsl` → `~/.gitconfig`, `.config/git/allowed_signers`, `ssh_config.wsl` → `~/.ssh/config`, and (only when actually running under WSL with the Windows path present) `windows-terminal-settings.json` onto the Windows side. The Windows Terminal link is created via `powershell.exe` as a native Windows symlink targeting the `\\wsl.localhost\...` UNC form of the file, not a plain `ln -s` — Windows Terminal is a native Windows process and can't resolve a symlink whose target is a Linux path. Requires Developer Mode enabled (or an elevated shell); warns and no-ops rather than failing the script if that's missing. Manual, first-time-per-machine.
 - **`install.macos.sh [personal|work]`** — macOS only. Calls `install.sh`, then symlinks `gitconfig.macos-<personal|work>` (default `personal`) → `~/.gitconfig`, `.config/git/allowed_signers`, and `ssh_config.macos` → `~/.ssh/config`. Mirrors `install.wsl.sh`'s structure. Manual, first-time-per-machine.
 - **`install.macos-dev.sh [personal|work]`** — macOS only. Runs `brew bundle --file=Brewfile.macos-dev` (font-jetbrains-mono, VS Code, Colima, Docker CLI, docker-compose, zsh-autocomplete), then symlinks `colima.yaml.macos-<personal|work>` (default `personal`) → `~/.colima/_templates/default.yaml`. Doesn't call `install.sh` — run that separately first. Manual, first-time-per-machine (safe to re-run).
 - **`install.macos-personal.sh`** — macOS only. Runs `brew bundle --file=Brewfile.macos-personal` (Obsidian, Tailscale). No symlinking. Manual, first-time-per-machine.
