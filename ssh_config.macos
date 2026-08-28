@@ -1,2 +1,7 @@
+# colima manages this file itself once a VM exists; declared here (rather than
+# left for colima to inject) so symlinking this file over ~/.ssh/config doesn't
+# make colima write its Include line straight into the tracked repo file.
+Include ~/.colima/ssh_config
+
 Host *
   IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

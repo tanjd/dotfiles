@@ -37,11 +37,13 @@ echo "zshrc linked."
 link_file "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
 echo "gitignore_global linked."
 
-# zsh custom plugins (not bundled with oh-my-zsh)
+# zsh custom plugins (not bundled with oh-my-zsh). Brought up to date on every run
+# rather than only cloned when missing: oh-my-zsh's own auto-update leaves
+# $ZSH_CUSTOM alone, so a clone otherwise stays frozen at its install-day commit.
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 mkdir -p "$ZSH_CUSTOM/plugins"
-[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+clone_or_update https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+clone_or_update https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 echo "zsh plugins installed."
 
 # Claude Code

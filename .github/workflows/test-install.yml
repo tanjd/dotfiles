@@ -25,3 +25,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: ./install.macos.sh
+
+  install-macos-dev-sh:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./install.macos-dev.sh
+        env:
+          # Skip GUI casks (font, VS Code) — slow and flaky on hosted runners.
+          # Formulae (colima, docker, ...) and the symlink step still run.
+          HOMEBREW_BUNDLE_CASK_SKIP: "font-jetbrains-mono visual-studio-code"
+
+  install-macos-personal-sh:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./install.macos-personal.sh
+        env:
+          # Skip GUI casks — slow and flaky on hosted runners. This Brewfile
+          # is cask-only, so this job mainly guards against a syntax error.
+          HOMEBREW_BUNDLE_CASK_SKIP: "obsidian tailscale claude"

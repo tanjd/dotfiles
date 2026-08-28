@@ -10,3 +10,5 @@ cask "visual-studio-code"   # editor
 brew "colima"          # container runtime (Docker Desktop alternative)
 brew "docker"          # Docker CLI, talks to colima
 brew "docker-compose"  # docker compose CLI plugin
+
+brew "zsh-autocomplete"  # real-time type-ahead completion (see .zshrc)
